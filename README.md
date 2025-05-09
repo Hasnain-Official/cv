@@ -1,3 +1,7 @@
+# Node environment
+NODE_ENV = ''
+
+# DB creds
 DB_HOST
 DB_DIALECT
 DB_NAME 
