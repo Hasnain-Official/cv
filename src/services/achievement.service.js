@@ -7,19 +7,22 @@ const { STATUS_CODE } = require('../constants/constant');
 /**
  * @function save
  * @param {*} body 
- * @param {*} user
+ * @param {*} query
  * @returns {Promise<Object>} 
- * @use Save Achievement
+ * @use Save achievement
  */
-exports.saveAchievement = async function (body) {
+exports.saveAchievement = async function (body, query) {
     const {
         name,
         companyId,
-        userId
     } = body;
-    if (!name || !companyId || !isUuid.v4(companyId) || !userId || !isUuid.v4(userId)) {
+    const { userId } = query;
+
+    if(!name || !companyId || !userId) 
         return { status: STATUS_CODE.BADREQUEST, message: errorHandler.missing };
-    }
+    if(!isUuid.v4(companyId) || !isUuid.v4(userId))
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.invalidData };
+
     const newData = {
         name,
         slug: name.toLowerCase().trim(),
@@ -31,20 +34,22 @@ exports.saveAchievement = async function (body) {
 }
 
 /**
- * Save Acheivements in bulk
+ * Save achievements in bulk
  * @function save
  * @param {*} body 
- * @param {*} user 
+ * @param {*} query 
  * @returns {Promise<Object>}
- * @use saveBulkAchievements
+ * @use Save achievements in bulk
  */
-exports.saveBulkAchievements = async function (body) {
+exports.saveBulkAchievements = async function (body, query) {
     const {
-        achievement,
-        userId
+        achievement
     } = body;
-    if (!achievement) return { status: STATUS_CODE.BADREQUEST, message: errorHandler.missing };
+    const { userId } = query;
     const created = [], errorWhileCreating = [];
+
+    if (!achievement) 
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.missing };
 
     achievement.map(async val => {
         try {
@@ -62,16 +67,16 @@ exports.saveBulkAchievements = async function (body) {
     });
     return {
         created: created,
-        errorWhileCreating: errorWhileCreating
+        errorWhileCreatin: errorWhileCreating
     }
 }
 
 /**
- * Get Achievements
+ * Get achievements
+ * @function get
  * @param {*} query 
- * @param {*} user 
  * @returns {Promise<Object>}
- * @use Get Achievements
+ * @use Get achievements
  */
 exports.getAchievements = async function (query) {
     const {
@@ -99,16 +104,87 @@ exports.getAchievements = async function (query) {
     return !getData.error ? getData : { status: 500, message: errorHandler.somethingWentWrong };
 }
 
-exports.updateAchievementsById = async function () {
-    return {};
+/**
+ * Update achievement by id
+ * @function update
+ * @param {*} body 
+ * @param {*} query
+ * @returns {Promise<Object>}
+ * @use Update achievement record by id
+ */
+exports.updateAchievementById = async function (body, query) {
+    const {
+        name,
+        isActive,
+        isDeleted,
+        companyId,
+    } = body;
+    const { id } = query;
+
+    if( !id ) {
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.missing };
+    }
+    if( !isUuid.v4(id)) {
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.invalidData };
+    }
+
+    const updateObj = {};
+    if(name) {
+        updateObj['name'] = name;
+        updateObj['slug'] = name.toLowerCase().trim();
+    }
+    if(isActive && typeof isActive !== 'boolean') updateObj['isActive'] = isActive;
+    if(isDeleted && typeof isDeleted !== 'boolean' ) updateObj['isDeleted'] = isDeleted;
+    if(companyId && isUuid.v4(companyId)) updateObj['companyId'] = companyId;
+
+    const updatedData = await Achievement.update(updateObj, { where: { id }});
+    return !updatedData ?
+            { status: STATUS_CODE.BADREQUEST, message: errorHandler.dataNotFound, data: {} } :
+            updatedData;
 }
 
-exports.deleteAchievementById = async function ({ id }) {
-    return {};
+/**
+ * Delete achievement by id
+ * @function delete
+ * @param {*} query 
+ * @returns {Promise<Object>}
+ * @use Delete achievement record by id
+ */
+exports.deleteAchievementById = async function (query) {
+    const { id } = query;
+
+    if(!id)
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.missing };
+    if(!isUuid.v4(id))
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.invalidData };
+
+    const deleteObj = { isActive: false, isDeleted: true };
+    const deletedData = await Achievement.update(deleteObj, { id });
+
+    return !deletedData ?
+            { status: STATUS_CODE.BADREQUEST, message: errorHandler.dataNotFound, data: {} } :
+            deletedData;
 }
 
-exports.deactivateAchievementsById = async function (query) {
-    const {id, companyId} = query;
-    
-    return {};
+/**
+ * Deactivate achievement by id
+ * @function disable
+ * @param {*} query 
+ * @returns {Promise<Object>}
+ * @use Deactivate achievement record by id
+ */
+exports.deactivateAchievementById = async function (query) {
+    const { id } = query;
+
+    if(!id)
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.missing };
+    if(!isUuid.v4(id))
+        return { status: STATUS_CODE.BADREQUEST, message: errorHandler.invalidData };
+
+    const deactivateObj = { isActive: false };
+    const deactivatedData = await Achievement.update(deactivateObj, { id });
+
+    return !deactivatedData ?
+        { status: STATUS_CODE.BADREQUEST, message: errorHandler.dataNotFound, data: {} } :
+        deactivatedData;
 }
