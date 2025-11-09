@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const { connect_db } = require("./config/db.config");
 const { transform } = require('./src/middlewares/interceptors/request.interceptor');
 const router = require('./src/routes/route');
+const { Validator } = require('./src/middlewares/interceptors/response.interceptor');
 
 const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000, // 15 minutes
@@ -25,15 +26,13 @@ app.use(helmet());
 app.use(xss());
 app.use(limiter);
 app.use(transform);
+app.use(Validator);
 app.use(router);
 
 connect_db(app);
 
 app.use("*", (req, res) => {
-    return res.status(404).json({
-        status : false,
-        message : "The page you are looking for does not exists."
-    })
+    return res.status(404).json({ message: `The page you are looking for doesn't exists.`, data: {} });
 });
 
 app.on('ready', () => {

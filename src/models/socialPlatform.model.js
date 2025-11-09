@@ -1,7 +1,7 @@
 const { UUIDV4, DataTypes } = require("sequelize");
 const { sequelize } = require("../../config/db.config");
 
-const Project = sequelize.define('project', {
+const SocialPlatform = sequelize.define('socialPlatform', {
     id: {
         type: DataTypes.UUIDV4,
         primaryKey: true,
@@ -10,29 +10,17 @@ const Project = sequelize.define('project', {
     name: {
         type: DataTypes.STRING,
     },
-    subName: {
+    slug: {
         type: DataTypes.STRING,
     },
-    description: {
+    logo: {
         type: DataTypes.STRING,
     },
-    workDescription: {
+    profileURL: {
         type: DataTypes.STRING
     },
-    frontendTech: {
-        type: DataTypes.STRING
-    },
-    backendTech: {
-        type: DataTypes.STRING
-    },
-    companyId: {
+    userId: {
         type: DataTypes.UUIDV4
-    },
-    siteURL: {
-        type: DataTypes.STRING
-    },
-    imageURL: {
-        type: DataTypes.STRING
     }
 }, {
     timestamps: true,
@@ -41,4 +29,4 @@ const Project = sequelize.define('project', {
     deletedAt: 'deletedAt'
 });
 
-module.exports = Project;
+module.exports = SocialPlatform;

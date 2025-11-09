@@ -1,7 +1,7 @@
 const { UUIDV4, DataTypes } = require("sequelize");
 const { sequelize } = require("../../config/db.config");
 
-const Journey = sequelize.define('journey', {
+const Project = sequelize.define('project', {
     id: {
         type: DataTypes.UUIDV4,
         primaryKey: true,
@@ -10,29 +10,35 @@ const Journey = sequelize.define('journey', {
     name: {
         type: DataTypes.STRING,
     },
-    empId: {
-        type: DataTypes.STRING
+    subName: {
+        type: DataTypes.STRING,
     },
-    companyName: {
-        type: DataTypes.STRING
-    },
-    startDate: {
-        type: DataTypes.DATE
-    },
-    endDate: {
-        type: DataTypes.DATE
-    },
-    companyAddress: {
-        type: DataTypes.STRING
-    },
-    designation: {
+    description: {
         type: DataTypes.STRING,
     },
     workDescription: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING
     },
-    isCurrentCompany: {
-        type: DataTypes.BOOLEAN
+    frontendTech: {
+        type: DataTypes.STRING
+    },
+    backendTech: {
+        type: DataTypes.STRING
+    },
+    companyId: {
+        type: DataTypes.UUIDV4
+    },
+    siteURL: {
+        type: DataTypes.STRING
+    },
+    imageURL: {
+        type: DataTypes.STRING
+    },
+    role: {
+        type: DataTypes.UUIDV4
+    },
+    userId: {
+        type: DataTypes.UUIDV4
     }
 }, {
     timestamps: true,
@@ -41,4 +47,4 @@ const Journey = sequelize.define('journey', {
     deletedAt: 'deletedAt'
 });
 
-module.exports = Journey;
+module.exports = Project;

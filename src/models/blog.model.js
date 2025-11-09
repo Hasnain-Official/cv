@@ -1,21 +1,23 @@
 const { UUIDV4, DataTypes } = require("sequelize");
 const { sequelize } = require("../../config/db.config");
 
-const Achievement = sequelize.define('achievement', {
+const Blog = sequelize.define('blog', {
     id: {
         type: DataTypes.UUIDV4,
         primaryKey: true,
         defaultValue: UUIDV4
     },
-    name: {
+    siteURL: {
         type: DataTypes.STRING,
     },
-    slug: {
+    imageURL: {
         type: DataTypes.STRING,
     },
-    companyId: {
-        type: DataTypes.UUIDV4,
-        
+    title: {
+        type: DataTypes.STRING,
+    },
+    userId: {
+        type: DataTypes.UUIDV4
     }
 }, {
     timestamps: true,
@@ -24,4 +26,4 @@ const Achievement = sequelize.define('achievement', {
     deletedAt: 'deletedAt'
 });
 
-module.exports = Achievement;
+module.exports = Blog;

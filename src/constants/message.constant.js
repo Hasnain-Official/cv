@@ -26,6 +26,7 @@ const successHandler = {
     incorrectPassword : `Password you have entered is incorrect`,
     incorrectUsername : `Username you have entered is incorrect`,
     incorrectEmail : `Email you have entered is incorrect`,
+    internalServerError: `Internal server error`,
     email : "Email can't be empty",
     samePassword: "New password cannot be same as old password",
     somethingWentWrong: "Something went wrong",

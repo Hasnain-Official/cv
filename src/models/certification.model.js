@@ -15,6 +15,9 @@ const Certification = sequelize.define('achievement', {
     },
     companyId: {
         type: DataTypes.UUIDV4,
+    },
+    userId: {
+        type: DataTypes.UUIDV4
     }
 }, {
     timestamps: true,

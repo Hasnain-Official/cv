@@ -1,19 +1,19 @@
 const { UUIDV4, DataTypes } = require("sequelize");
 const { sequelize } = require("../../config/db.config");
 
-const Blog = sequelize.define('blog', {
+const projectRole = sequelize.define('projectRole', {
     id: {
         type: DataTypes.UUIDV4,
         primaryKey: true,
         defaultValue: UUIDV4
     },
-    siteURL: {
+    name: {
         type: DataTypes.STRING,
     },
-    imageURL: {
+    slug: {
         type: DataTypes.STRING,
     },
-    title: {
+    logo: {
         type: DataTypes.STRING,
     }
 }, {
@@ -23,4 +23,4 @@ const Blog = sequelize.define('blog', {
     deletedAt: 'deletedAt'
 });
 
-module.exports = Blog;
+module.exports = projectRole;
